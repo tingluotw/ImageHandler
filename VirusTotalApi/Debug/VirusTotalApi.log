@@ -1,0 +1,64 @@
+﻿已經開始建置於 2014/11/29 下午 11:59:57。
+     1>節點 2 (Build 目標) 上的專案 "C:\ImageHandler\VirusTotalApi\VirusTotalApi.vcxproj"。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\ImageHandler\VirusTotalApi\include /IC:\ImageHandler\VirusTotalApi\custom_library\libcurl\include /IC:\ImageHandler\VirusTotalApi\custom_library\jansson\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D VIRUSTOTALAPI_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt lib\VtFile.c
+         VtFile.c
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(123): warning C4273: 'VtFile_new' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(50) : 請參閱 'VtFile_new' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(130): warning C4273: 'VtFile_get' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(59) : 請參閱 'VtFile_get' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(135): warning C4273: 'VtFile_put' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(69) : 請參閱 'VtFile_put' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(141): warning C4273: 'VtFile_setApiKey' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(78) : 請參閱 'VtFile_setApiKey' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(147): warning C4273: 'VtFile_setOffset' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(88) : 請參閱 'VtFile_setOffset' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(158): warning C4273: 'VtFile_getResponse' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(174) : 請參閱 'VtFile_getResponse' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(165): warning C4273: 'VtFile_setProgressCallback' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(99) : 請參閱 'VtFile_setProgressCallback' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(211): warning C4273: 'VtFile_getProgress' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(112) : 請參閱 'VtFile_getProgress' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(220): warning C4273: 'VtFile_cancelOperation' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(121) : 請參閱 'VtFile_cancelOperation' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(267): warning C4273: 'VtFile_scan' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(132) : 請參閱 'VtFile_scan' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(396): warning C4273: 'VtFile_rescanHash' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(151) : 請參閱 'VtFile_rescanHash' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(554): warning C4273: 'VtFile_rescanDelete' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(162) : 請參閱 'VtFile_rescanDelete' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(644): warning C4273: 'VtFile_report' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(172) : 請參閱 'VtFile_report' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(654): warning C4101: 'current_directory' : 未參考的區域變數
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(753): warning C4273: 'VtFile_search' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(186) : 請參閱 'VtFile_search' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(898): warning C4273: 'VtFile_clusters' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(204) : 請參閱 'VtFile_clusters' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(1001): warning C4273: 'VtFile_download' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(220) : 請參閱 'VtFile_download' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(1075): warning C4273: 'VtFile_downloadToFile' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(231) : 請參閱 'VtFile_downloadToFile' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(1081): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(211) : 請參閱 'fopen' 的宣告
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(1093): warning C4273: 'VtFile_uploadUrl' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(235) : 請參閱 'VtFile_uploadUrl' 之前的定義
+     1>c:\imagehandler\virustotalapi\lib\vtfile.c(1155): warning C4273: 'VtFile_scanBigFile' : 不一致的 DLL 連結
+                 c:\imagehandler\virustotalapi\include\vtfile.h(237) : 請參閱 'VtFile_scanBigFile' 之前的定義
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\ImageHandler\Debug\VirusTotalApi.dll" /INCREMENTAL /NOLOGO /LIBPATH:"C:\ImageHandler\VirusTotalApi\custom_library\libcurl\LIB Debug" /LIBPATH:C:\ImageHandler\VirusTotalApi\custom_library\jansson\lib libcurld.lib jansson_d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\ImageHandler\Debug\VirusTotalApi.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\ImageHandler\Debug\VirusTotalApi.lib" /MACHINE:X86 /DLL Debug\VtApiPage.obj
+         Debug\VtComments.obj
+         Debug\VtDebug.obj
+         Debug\VtDomain.obj
+         Debug\VtFile.obj
+         Debug\VtFileDist.obj
+         Debug\VtIpAddr.obj
+         Debug\VtObject.obj
+         Debug\VtResponse.obj
+         Debug\VtUrl.obj
+         Debug\VtUrlDist.obj
+         VirusTotalApi.vcxproj -> C:\ImageHandler\Debug\VirusTotalApi.dll
+     1>專案 "C:\ImageHandler\VirusTotalApi\VirusTotalApi.vcxproj" (Build 目標) 建置完成。
+
+建置成功。
+
+經過時間 00:00:00.58

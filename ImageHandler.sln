@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageHandler", "ImageHandler\ImageHandler.vcxproj", "{AF3A2BDD-A4FF-466E-8A15-F52B2285AFC2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirusTotalApi", "VirusTotalApi\VirusTotalApi.vcxproj", "{DFD69680-527F-4F5C-A076-D38FB476A18E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF3A2BDD-A4FF-466E-8A15-F52B2285AFC2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AF3A2BDD-A4FF-466E-8A15-F52B2285AFC2}.Debug|Win32.Build.0 = Debug|Win32
+		{AF3A2BDD-A4FF-466E-8A15-F52B2285AFC2}.Debug|Win32.Deploy.0 = Debug|Win32
+		{AF3A2BDD-A4FF-466E-8A15-F52B2285AFC2}.Release|Win32.ActiveCfg = Release|Win32
+		{AF3A2BDD-A4FF-466E-8A15-F52B2285AFC2}.Release|Win32.Build.0 = Release|Win32
+		{DFD69680-527F-4F5C-A076-D38FB476A18E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DFD69680-527F-4F5C-A076-D38FB476A18E}.Debug|Win32.Build.0 = Debug|Win32
+		{DFD69680-527F-4F5C-A076-D38FB476A18E}.Release|Win32.ActiveCfg = Release|Win32
+		{DFD69680-527F-4F5C-A076-D38FB476A18E}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

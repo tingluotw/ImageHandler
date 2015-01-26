@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <RemoteDebuggerCommand>C:\Users\WDKRemoteUser.ireneVM-PC\Downloads\ImageHandler.exe</RemoteDebuggerCommand>
+    <RemoteDebuggerWorkingDirectory>C:\Users\WDKRemoteUser.ireneVM-PC\Downloads</RemoteDebuggerWorkingDirectory>
+    <RemoteDebuggerServerName>ireneVM-PC</RemoteDebuggerServerName>
+    <RemoteDebuggerDebuggerType>NativeOnly</RemoteDebuggerDebuggerType>
+    <DeploymentDirectory>C:\Users\WDKRemoteUser.ireneVM-PC\Downloads</DeploymentDirectory>
+    <DebuggerFlavor>WindowsRemoteDebugger</DebuggerFlavor>
+    <RemoteDebuggerCommandArguments>1 hello.exe</RemoteDebuggerCommandArguments>
+    <AdditionalFiles>C:\ImageHandler\Debug\additional\ca-bundle.crt;C:\ImageHandler\Debug\additional\hello.exe;C:\ImageHandler\Debug\additional\jansson_d.dll;C:\ImageHandler\Debug\additional\libcurld.dll;C:\ImageHandler\Debug\additional\libeay32.dll;C:\ImageHandler\Debug\additional\libssh2.dll;C:\ImageHandler\Debug\additional\ssleay32.dll;</AdditionalFiles>
+  </PropertyGroup>
+</Project>
