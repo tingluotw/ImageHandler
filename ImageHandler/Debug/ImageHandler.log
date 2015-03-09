@@ -1,82 +1,89 @@
-﻿已經開始建置於 2014/12/25 上午 08:16:45。
+﻿已經開始建置於 2015/3/9 下午 02:12:01。
      1>節點 2 (Build 目標) 上的專案 "C:\ImageHandler\ImageHandler\ImageHandler.vcxproj"。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\ImageHandler\VirusTotalApi\include /IC:\ImageHandler\VirusTotalApi\custom_library\jansson\include /IC:\ImageHandler\VirusTotalApi\custom_library\libcurl\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D VTAPI_EXPORTS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ImageHandler_final.c
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\ImageHandler\VirusTotalApi\include /IC:\ImageHandler\VirusTotalApi\custom_library\jansson\include /IC:\ImageHandler\VirusTotalApi\custom_library\libcurl\include /IC:\ImageHandler\openssl\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D VTAPI_EXPORTS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ImageHandler_final.c
          ImageHandler_final.c
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(167): warning C4090: '=' : 不同的 'const' 限定詞
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(195): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(196): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(188): warning C4101: 'tail' : 未參考的區域變數
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(214): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(220): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(221): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(222): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(239): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(240): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(241): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(242): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(246): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(249): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(265): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(286): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(171): warning C4090: '=' : 不同的 'const' 限定詞
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(200): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(201): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(193): warning C4101: 'tail' : 未參考的區域變數
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(219): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(225): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(226): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(227): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(244): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(245): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(246): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(247): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(251): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(254): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(277): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(298): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(211) : 請參閱 'fopen' 的宣告
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(327): warning C4098: 'WriteDoneRecord' : 'void' 函式正在傳回值
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(330): warning C4098: 'WriteDoneRecord' : 'void' 函式正在傳回值
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(282): warning C4101: 'dwWaitResult' : 未參考的區域變數
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(377): warning C4013: 'ConnectToNewClient' 未定義; 假設 extern 傳回整數
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(460): warning C4996: 'wcstombs': This function or variable may be unsafe. Consider using wcstombs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(339): warning C4098: 'WriteDoneRecord' : 'void' 函式正在傳回值
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(342): warning C4098: 'WriteDoneRecord' : 'void' 函式正在傳回值
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(294): warning C4101: 'dwWaitResult' : 未參考的區域變數
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(389): warning C4013: 'ConnectToNewClient' 未定義; 假設 extern 傳回整數
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(472): warning C4996: 'wcstombs': This function or variable may be unsafe. Consider using wcstombs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdlib.h(575) : 請參閱 'wcstombs' 的宣告
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(509): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(521): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(195) : 請參閱 'strncpy' 的宣告
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(510): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(522): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(186) : 請參閱 'strncat' 的宣告
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(527): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(539): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(211) : 請參閱 'fopen' 的宣告
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(797): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(827): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(864): warning C4090: '=' : 不同的 'const' 限定詞
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(880): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(888): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(922): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(931): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(932): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(942): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(943): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(953): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(884): warning C4101: 'dwWaitResult' : 未參考的區域變數
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(976): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(987): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1021): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1029): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1030): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1039): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1040): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1050): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(981): warning C4101: 'dwWaitResult' : 未參考的區域變數
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(978): warning C4101: 'positive' : 未參考的區域變數
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1070): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1083): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1336): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1407): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(806): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(836): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(866): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(903): warning C4090: '=' : 不同的 'const' 限定詞
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(938): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(211) : 請參閱 'fopen' 的宣告
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(942): warning C4101: 'i' : 未參考的區域變數
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(993): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1001): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1035): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1044): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1045): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1055): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1056): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1066): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(997): warning C4101: 'dwWaitResult' : 未參考的區域變數
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1089): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1100): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1134): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1142): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1143): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1152): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1153): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1163): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1094): warning C4101: 'dwWaitResult' : 未參考的區域變數
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1091): warning C4101: 'positive' : 未參考的區域變數
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1186): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1200): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1210): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1218): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1491): warning C4133: '函式' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1578): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(283) : 請參閱 'scanf' 的宣告
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1470): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1507): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1570): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1576): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1582): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1601): warning C4047: '=' : 'PULONG' 與 'ULONG' 間接取值的層級不同
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1616): warning C4133: '函式' : 不相容的類型 - 從 'PULONG' 至 'const char *'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1629): warning C4133: '函式' : 不相容的類型 - 從 'char [9]' 至 'LPCWSTR'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1636): warning C4133: '函式' : 不相容的類型 - 從 'char [9]' 至 'LPCWSTR'
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1559): warning C4101: 'index' : 未參考的區域變數
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(1558): warning C4101: 'info' : 未參考的區域變數
-     1>c:\imagehandler\imagehandler\imagehandler_final.c(849): warning C4716: 'MoveObjToDoneQueue' : 必須傳回值
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1640): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1676): warning C4133: '正在初始化' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1739): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1745): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1751): warning C4133: '=' : 不相容的類型 - 從 'FileState *' 至 'FileState *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1770): warning C4047: '=' : 'PULONG' 與 'ULONG' 間接取值的層級不同
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1785): warning C4133: '函式' : 不相容的類型 - 從 'PULONG' 至 'const char *'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1798): warning C4133: '函式' : 不相容的類型 - 從 'char [9]' 至 'LPCWSTR'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1805): warning C4133: '函式' : 不相容的類型 - 從 'char [9]' 至 'LPCWSTR'
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1728): warning C4101: 'index' : 未參考的區域變數
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(1727): warning C4101: 'info' : 未參考的區域變數
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(822): warning C4716: 'MoveObjToScanQueue' : 必須傳回值
+     1>c:\imagehandler\imagehandler\imagehandler_final.c(888): warning C4716: 'MoveObjToDoneQueue' : 必須傳回值
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\ImageHandler\Debug\ImageHandler.exe" /INCREMENTAL /NOLOGO Winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\ImageHandler\Debug\ImageHandler.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\ImageHandler\Debug\ImageHandler.lib" /MACHINE:X86 Debug\ImageHandler_final.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\ImageHandler\Debug\ImageHandler.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\ImageHandler\openssl\lib Winmm.lib libeay32.lib ssleay32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\ImageHandler\Debug\ImageHandler.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\ImageHandler\Debug\ImageHandler.lib" /MACHINE:X86 Debug\ImageHandler_final.obj
          C:\ImageHandler\Debug\VirusTotalApi.lib
          ImageHandler.vcxproj -> C:\ImageHandler\Debug\ImageHandler.exe
      1>專案 "C:\ImageHandler\ImageHandler\ImageHandler.vcxproj" (Build 目標) 建置完成。
 
 建置成功。
 
-經過時間 00:00:01.60
+經過時間 00:00:00.95
