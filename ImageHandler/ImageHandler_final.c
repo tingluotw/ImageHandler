@@ -257,11 +257,17 @@ VOID DeleteNode(FileState *list, FileState *node){
 }
 VOID cleanNode(FileState* target){
 
-	target->hash = NULL;
+	target->hash = NULL;		
+	target->positive = -1;	
+	target->response_code = 0;
+	target->scan_num = 0;
+	target->report_num = 0;
+	target->prev = NULL;
+	target->next = NULL;
+	target->total_num = 0;
+	target->report_time = 0;
+	target->scan_time = 0;
 	target->http_response = 0;
-	target->id = 0;
-	target->positive = -1;
-	
 }
 /*
   PrintNode: Print the specific list
