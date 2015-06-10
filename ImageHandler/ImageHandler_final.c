@@ -1,7 +1,7 @@
 /************************************************************************************************************* 
  *   ImageHandler_ver1
  *   Authored by Irene Luo 
- *   Last Modified 2014/11/30
+ *   Last Modified 2015/5/30
  *   Description:
  *      0. Get ZwCreateProcess native api's address and send it to ImageController(kernel driver)
  *		1. Receive the captured image path from ImageController
@@ -123,14 +123,15 @@ typedef struct fileState {
 	int id;				//node id
 	DWORD report_time;
 	DWORD scan_time;
+	DWORD execution_time;
 	int http_response;
 	struct FileState *prev;
 	struct FileState *next;
-}FileState;
+} FileState;
 
-struct FileState* ScanQueue = NULL;
-struct FileState* ReportQueue = NULL;
-struct FileState* DoneQueue = NULL;
+FileState* ScanQueue = NULL;
+FileState* ReportQueue = NULL;
+FileState* DoneQueue = NULL;
 
 PIPEINST Pipe[INSTANCES];
 HANDLE hEvents[INSTANCES];
@@ -138,14 +139,18 @@ HANDLE hThread[THREADCOUNT];
 
 HANDLE hMutex_dq = NULL; //mutex's handle of done queue
 HANDLE hMutex_request = NULL;
-INT totalrequest = 0;
-CHAR const KEY[MAX_NUMBERS_OF_KEY][MAX_LENGTH_OF_APIKEY] = {"d9ce2439d5fa7f4e064469605614c6cb61f416f735cd35a98e4644fc2cd42dc8",
-															"18d3ac54fcd0e6329ae52c9afba4bbac7de3dd9af5aa7262f9855bb404e1eacb",
-															"cfeab1fc040f8683c5de79adc1929b359526ec44c0b29f305a6c524533b43406",
-															"c2923f15a33c701fb7e3efa6054a94905af3b1be9d1e84fbdd4213c928fcaa76",
-															"035e6747575ce48975563167256750d56d2d81ba0af8e80a718f068fc5299b11",
-															"fb23bb26cad438483eed19cc294ad8d55fe671f36aa7ee7bb58bbaa67f43f71f"
-															};
+INT TotalRequest = 0;
+INT OuputCounter = 1;	//only used in WriteDoneRecord()
+INT NumInSq = 0;
+INT NumInRq = 0;
+INT NumInDq = 0;
+CHAR const KEY[MAX_NUMBERS_OF_KEY][MAX_LENGTH_OF_APIKEY] = {
+						"d9ce2439d5fa7f4e064469605614c6cb61f416f735cd35a98e4644fc2cd42dc8",
+						"18d3ac54fcd0e6329ae52c9afba4bbac7de3dd9af5aa7262f9855bb404e1eacb",
+						"cfeab1fc040f8683c5de79adc1929b359526ec44c0b29f305a6c524533b43406",
+						"c2923f15a33c701fb7e3efa6054a94905af3b1be9d1e84fbdd4213c928fcaa76",
+						"035e6747575ce48975563167256750d56d2d81ba0af8e80a718f068fc5299b11",
+						"fb23bb26cad438483eed19cc294ad8d55fe671f36aa7ee7bb58bbaa67f43f71f"};
 
 /*
    CreateNode: Create a node and initialize it
@@ -181,6 +186,7 @@ FileState*  CreateNode(CHAR* filepath, INT keyIndex)
 	node->id = 0;
 	node->report_time = 0;
 	node->scan_time = 0;
+	node->execution_time = 0;
 	node->http_response = 0;
 	return node;
 }
@@ -195,16 +201,13 @@ FileState* InitLinkedList(){
 
 	head = CreateNode(head_imagepath, 0);
 
-	if (head != NULL)
-	{
+	if (head != NULL){
 		head->next = head;
 		head->prev = head;
 	}
-	else
-	{
+	else{
 		printf(">> Error: CreateNode (Head) fail!\n");
 	}
-
 	return head;
 }
 /*
@@ -239,8 +242,7 @@ VOID DeleteNode(FileState *list, FileState *node){
 	FileState* head = list;
 
 	//It is the middle node in this list
-	if (node->filepath != head_imagepath && node->next != NULL)
-	{
+	if (node->filepath != head_imagepath && node->next != NULL){
 		FileState *prev_node = node->prev;
 		FileState *next_node = node->next;
 		prev_node->next = next_node;
@@ -249,7 +251,6 @@ VOID DeleteNode(FileState *list, FileState *node){
 	//It is the last node in this list
 	else if (node->filepath != head_imagepath && node->next == NULL){
 		FileState *prev_node = node->prev;
-
 		prev_node->next = NULL;
 		head->prev = prev_node;
 	}
@@ -296,15 +297,14 @@ VOID WriteDoneRecord(FileState* file)
 	CHAR openfile[] = "result.txt";
 
 	pFile = fopen(openfile, "a");
-	if (pFile)
-	{
+	if (pFile){
 		// id > imagepath
 		// positive = .. 
 		// scan time .. / scan num .. = .. (ms)
 		// report time .. / report num .. = ..(ms)
 
-		fprintf(pFile, "%d", file->id);
-		fprintf(pFile, "%s", " > ");
+		fprintf(pFile, "%d", OuputCounter);
+		fprintf(pFile, "%s", "> ");
 		fprintf(pFile, "%s", file->filepath);
 		fprintf(pFile, "%s", "\n");
 
@@ -330,9 +330,15 @@ VOID WriteDoneRecord(FileState* file)
 		fprintf(pFile, "%s", " = ");
 		fprintf(pFile, "%f", (FLOAT)file->report_time / file->report_num);
 		fprintf(pFile, "%s", " (ms)");
+		fprintf(pFile, "%s", " \n");
+
+		fprintf(pFile, "%s", "execution time: ");
+		fprintf(pFile, "%d", file->execution_time);
+		fprintf(pFile, "%s", " (ms)");
 		fprintf(pFile, "%s", " \n\n ");
 
 		fclose(pFile);
+		OuputCounter++;
 	}
 	else{//if pFile fail
 		printf("write_to file fail...\n");
@@ -353,15 +359,13 @@ VOID ReleaseNode(FileState* node){
 VOID getErrorMsg(DWORD error)
 {
 	
-	switch (error)
-	{
-	case ERROR_IO_PENDING:
-		
-		printf(">> Overlapped I/O operation is in progress\n");
-		break;
-	default:
-		printf(">> Get error msg: %d\n",error);
-		break;
+	switch (error){
+		case ERROR_IO_PENDING:	
+			printf(">> Overlapped I/O operation is in progress\n");
+			break;
+		default:
+			printf(">> Get error msg: %d\n",error);
+			break;
 	}
 }
 
@@ -379,8 +383,7 @@ VOID DisconnectAndReconnect(DWORD i)
 	//printf(">> Disconnect pipe[%d]\n", i);
 
 	// Disconnect the pipe instance. 
-	if (!DisconnectNamedPipe(Pipe[i].hPipeInst))
-	{
+	if (!DisconnectNamedPipe(Pipe[i].hPipeInst)){
 		//printf(">> DisconnectNamedPipe failed with %d.\n", GetLastError());
 		getErrorMsg(GetLastError());
 	}
@@ -391,8 +394,8 @@ VOID DisconnectAndReconnect(DWORD i)
 		&Pipe[i].oOverlap);
 
 	Pipe[i].dwState = Pipe[i].fPendingIO ?
-	CONNECTING_STATE : // still connecting 
-					   READING_STATE;     // ready to read 
+		CONNECTING_STATE : // still connecting 
+		READING_STATE;     // ready to read 
 }
  
 /*
@@ -411,36 +414,34 @@ BOOL ConnectToNewClient(HANDLE hPipe, LPOVERLAPPED lpo)
 	fConnected = ConnectNamedPipe(hPipe, lpo);
 
 	// Overlapped ConnectNamedPipe should return zero. 
-	if (fConnected)
-	{
+	if (fConnected){
 		//printf(">> ConnectNamedPipe failed with %d.\n", GetLastError());
 		getErrorMsg(GetLastError());
 		return 0;
 	}
 
-	switch (GetLastError())
-	{
+	switch (GetLastError()){
 		// The overlapped connection in progress. 
-	case ERROR_IO_PENDING:
-		//printf(">> Error io pending and set fPendingio=true\n");
-		fPendingIO = TRUE;
-		break;
+		case ERROR_IO_PENDING:
+			//printf(">> Error io pending and set fPendingio=true\n");
+			fPendingIO = TRUE;
+			break;
 
 		// Client is already connected, so signal an event. 
 
-	case ERROR_PIPE_CONNECTED:
-		//printf(">> Error pipe connected and set event\n");
-		if (SetEvent(lpo->hEvent))
-			break;
+		case ERROR_PIPE_CONNECTED:
+			//printf(">> Error pipe connected and set event\n");
+			if (SetEvent(lpo->hEvent))
+				break;
 
 		// If an error occurs during the connect operation... 
-	default:
-	{
-		//printf(">> ConnectNamedPipe failed with %d.\n", GetLastError());
-		getErrorMsg(GetLastError());
+		default:
+		{
+			//printf(">> ConnectNamedPipe failed with %d.\n", GetLastError());
+			getErrorMsg(GetLastError());
 		
-		return 0;
-	}
+			return 0;
+		}
 	}
 
 	return fPendingIO;
@@ -561,8 +562,7 @@ CHAR* CheckForImagePath(CHAR* imagepath)
 	INT result = 0;
 
 
-	if (strncmp(imagepath, str, strlen(str)) == 0)
-	{
+	if (strncmp(imagepath, str, strlen(str)) == 0){
 		ret = strrchr(imagepath, '?');
 		ret = ret + 2;
 	}
@@ -589,10 +589,8 @@ CHAR* StringToLower(CHAR* str)
 	CHAR* result = NULL;
 	INT i = 0;
 	result = malloc(sizeof(CHAR)*strlen(str));
-	while (*t != '\0')
-	{
-		if (*t >= 'A' && *t <= 'Z')
-		{
+	while (*t != '\0'){
+		if (*t >= 'A' && *t <= 'Z'){
 			result[i] = tolower(*t);
 		}
 		else{
@@ -600,7 +598,7 @@ CHAR* StringToLower(CHAR* str)
 		}
 		t++;
 		i++;
-	}
+	};
 	result[i] = '\0';
 	return result;
 }
@@ -623,8 +621,7 @@ INT ScanFile(struct VtFile *vtFile, FileState* file){
 	//printf("ScanFile:%s\n", path);
 	ret = _stat(path, &stat_buf); //get the file state in system and store in stat_buf
 
-	if (ret != 0)
-	{
+	if (ret != 0){
 		perror(">> ScanFile: get file state error");
 		switch (errno){
 		case ENOENT:
@@ -637,9 +634,7 @@ INT ScanFile(struct VtFile *vtFile, FileState* file){
 			printf(">> ScanFile: Unexpected error in _stat(%d)", errno);
 		}
 	}
-	else //read file state successfully
-	{
-		
+	else{//read file state successfully		
 		printf(">> File size is: %d\n", stat_buf.st_size);
 		
 		//printf("File path is : %s\n", path);
@@ -659,18 +654,15 @@ INT ScanFile(struct VtFile *vtFile, FileState* file){
 		file->scan_num++;
 
 		//handle ret
-		if (ret == 204)
-		{
+		if (ret == 204){
 			file->http_response = 204;
 			ret = -1;
 		}
-		else if (ret == 403)
-		{
+		else if (ret == 403){
 			file->http_response = 403;
 			ret = -1;
 		}
-		else if (ret == 0)
-		{
+		else if (ret == 0){
 			char* str = NULL;
 			//printf("Already scan : %s\n", file->filepath);
 			file->http_response = 200;
@@ -691,16 +683,14 @@ INT ScanFile(struct VtFile *vtFile, FileState* file){
 			}
 
 			// get scan_id
-			if (response_code == 1)
-			{
+			if (response_code == 1){
 				file->scan_id = VtResponse_getString(vtResponse, "scan_id");
 				//printf("\nget scan_id %s \n", file->scan_id);
 
 			}
 
 		}
-		else // VtScan return -1, means curl has some problem
-		{
+		else{ // VtScan return -1, means curl has some problem
 			//printf("scan file error! \n");
 			ret = -1;
 		}
@@ -708,7 +698,7 @@ INT ScanFile(struct VtFile *vtFile, FileState* file){
 	//calculate scan request time
 	endScanRequest = timeGetTime();
 	file->scan_time = file->scan_time + (endScanRequest - startScanRequest);
-
+	
 	VtResponse_put(&vtResponse);
 	return ret;
 }
@@ -778,7 +768,6 @@ INT ReportFile(struct VtFile *vtFile, FileState* file)
 			file->hash = VtResponse_getString(vtResponse, "md5");
 		}
 
-
 		//positive = VtResponse_getString(response, "permalink");	
 
 	}//end of else
@@ -789,7 +778,7 @@ INT ReportFile(struct VtFile *vtFile, FileState* file)
 	file->report_time = file->report_time + (endReportRequest - startReportRequest);
 	//printf("new report_time:%d\n", file->report_time);
 	file->report_num++;
-
+	
 	//recycle the response object	
 	VtResponse_put(&vtResponse);
 	return ret;
@@ -831,15 +820,14 @@ INT MoveObjToReportQueue(FileState* node)
 {
 	INT ret = 0;
 	
-	if (node->scan_id != NULL)
-	{
+	if (node->scan_id != NULL){
 		InsertNode(ReportQueue, node);
 	}
 	else{
 		printf(">>Error: MoveObjToReportQueue: There's no scan_id in this node\n");
 		ret = -1;
 	}
-return ret;
+	return ret;
 }
 
 /*
@@ -861,10 +849,8 @@ INT MoveObjToDoneQueue(FileState* node)
 		//The thread got ownership of the mutex
 	case WAIT_OBJECT_0:
 		__try{
-			if (node->positive != -1)
-			{
+			if (node->positive != -1){
 				InsertNode(DoneQueue, node);
-				WriteDoneRecord(node);
 			}
 			else{
 				printf(">> Error: MoveObjToDoneQueue: there's no positive in this node\n");
@@ -873,8 +859,7 @@ INT MoveObjToDoneQueue(FileState* node)
 		}
 		__finally{
 			//release ownership of the mutex object
-			if (!ReleaseMutex(hMutex_dq))
-			{
+			if (!ReleaseMutex(hMutex_dq)){
 				printf(">> Error: MoveObjToDoneQueue: Release mutex_dq error\n");
 				ret = -1;
 			}
@@ -893,8 +878,7 @@ INT MoveObjToDoneQueue(FileState* node)
  */
 VOID AssignKey(FileState* file, INT state)
 {
-	switch (state)
-	{
+	switch (state){
 	case -1: //change to next key
 		file->key_index = (INT)(file->key_index + 1) % MAX_NUMBERS_OF_KEY;
 		if (file->key_index >= MAX_NUMBERS_OF_KEY)
@@ -996,12 +980,10 @@ VOID TraverseScanQueue(){
 	int ret = -1;
 	DWORD dwWaitResult;
 	
-	if (file->total_num > 0)
-		{
+	if (file->total_num > 0){
 			file = file->next;	// the first node in the list is head
 			
-			do
-			{
+			do{
 				struct VtFile  *vtFile = NULL;
 
 				vtFile = VtFile_new(); //create a VtFile obj
@@ -1010,71 +992,54 @@ VOID TraverseScanQueue(){
 
 				//if the file is not scan before, and it is not head node,too
 				//then call VtScan() 
-				if (file->id > 0)
-				{
+				if (file->id > 0){
 					//return 0 if get response code success, otherwise return -1
 					ret = ScanFile(vtFile, file);
-					totalrequest++;
+					TotalRequest++;
 
-					if (ret != 0)
-					{
-							if (file->http_response == 204)
-								{
-									printf(">> Error: Exceed the public API request rate limit! scan_time %d / scan_num %d\n", file->scan_time, file->scan_num);
-								}
-							else if (file->http_response == 403)
-								{
-									printf(">> Error: Do not have the required privilege\n");
-								}
-							else {
-									/* if scan file error, then change another key */
-									printf(">> Error: Scan file error! (%d times %d) %s\n", file->scan_num, totalrequest, file->filepath);
-								}
-								
-								file->scan_time += SCAN_PAUSE;						
-								file = file->next;
+					if (ret != 0){
+							if (file->http_response == 204) {
+								printf(">> Error: Exceed the public API request rate limit! scan_time %d / scan_num %d\n", file->scan_time, file->scan_num);
+							}else if (file->http_response == 403) {
+								printf(">> Error: Do not have the required privilege\n");
+							} else {/* if scan file error, then change another key */
+								printf(">> Error: Scan file error! (%d times %d) %s\n", file->scan_num, TotalRequest, file->filepath);
+							}	
 
-						}
-						else{ // get response_code successfully
-								if (file->response_code == 1)
-								{
+							file->scan_time += SCAN_PAUSE;						
+							file = file->next;
 
-									printf(">> Scan Success and move file to ReportQueue!\n");
-
-									next = file->next;									
-									DeleteNode(ScanQueue, file);
-									MoveObjToReportQueue(file);
-									file = next;
-
-								}
-								else if (file->response_code == 0)
-								{
-
-									printf(">> The item you searched for was not present in VirusTotal's dataset!\n");
-
-									next = file->next;									
-									DeleteNode(ScanQueue, file);
-									MoveObjToDoneQueue(file);
-									file = next;
-								}
-								else if (file->response_code == -2)
-								{
-
-									printf(">> Queued for analysis! (%d times %d) %s\n", file->scan_num, totalrequest,file->filepath);
-
-									file->scan_time += SCAN_PAUSE;								
-									file = file->next;
-								}
+					} 
+					else { // get response_code successfully
+							if (file->response_code == 1){
+								printf(">> Scan Success and move file to ReportQueue!\n");
+								next = file->next;									
+								DeleteNode(ScanQueue, file);
+								MoveObjToReportQueue(file);
+								file = next;
 							}
+							else if (file->response_code == 0){
+								printf(">> The item you searched for was not present in VirusTotal's dataset!\n");
+								next = file->next;									
+								DeleteNode(ScanQueue, file);
+								MoveObjToDoneQueue(file);
+								file = next;
+							}
+							else if (file->response_code == -2){
+								printf(">> Queued for analysis! (%d times %d) %s\n", file->scan_num, TotalRequest,file->filepath);
+								file->scan_time += SCAN_PAUSE;								
+								file = file->next;
+							}
+					}
 
-						}//end of if(file->id >= 0)
+				}//end of if(file->id >= 0)
 
-						//release vtResponse and vtFile obj			
-						VtFile_put(&vtFile);
+				//release vtResponse and vtFile obj			
+				VtFile_put(&vtFile);
 						
-					} while (file != NULL);//end of do
+		} while (file != NULL);//end of do
 					
-			}//end of if(file->total_num > 0)			
+	}//end of if(file->total_num > 0)			
 				
 }
 
@@ -1094,83 +1059,69 @@ VOID TraverseReportQueue()
 	DWORD dwWaitResult;
 	
 	
-	if (file->total_num > 0)
-		{
-				printf(">>>total_num inreport queue  %d\n", file->total_num);
-				file = file->next;
+	if (file->total_num > 0){
+			printf(">>>total_num inreport queue  %d\n", file->total_num);
+			file = file->next;
 				
-				do
-				{
+			do{
 
-					struct VtFile *vtFile;
+				struct VtFile *vtFile;
 
-					vtFile = VtFile_new();					
-					VtFile_setApiKey(vtFile, file->key);
+				vtFile = VtFile_new();					
+				VtFile_setApiKey(vtFile, file->key);
 
-					// if file's positive is negative, then call ReportFile() to get report
-					if (file->positive < 0)
-					{
+				// if file's positive is negative, then call ReportFile() to get report
+				if (file->positive < 0){
 
-						//return 0 if get positve successfully, otherwise return -1
-						ret = ReportFile(vtFile, file);
-						totalrequest++;
+					//return 0 if get positve successfully, otherwise return -1
+					ret = ReportFile(vtFile, file);
+					TotalRequest++;
 
-						if (ret != 0)
-						{
-							if (file->http_response == 204)
-							{
-								printf(">> Error: Exceed the public API request rate limit! report_time %d / report_num %d\n", file->report_time, file->report_num);
-							}
-							else if (file->http_response == 403)
-							{
-								printf(">> Error: Do not have the required privilege\n");
-							}
-							else {
-								printf(">> Error: report file error!key:%d (%d times %d) %s \n", file->key_index, totalrequest, file->report_num, file->filepath);
-								printf("scan id = %s\n", file->scan_id);
-							}
-							
-							file->report_time += REPORT_PAUSE;							
+					if (ret != 0){
+						if (file->http_response == 204){
+							printf(">> Error: Exceed the public API request rate limit! report_time %d / report_num %d\n", file->report_time, file->report_num);
+						}
+						else if (file->http_response == 403){
+							printf(">> Error: Do not have the required privilege\n");
+						}
+						else {
+							printf(">> Error: report file error!key:%d (%d times %d) %s \n", file->key_index, TotalRequest, file->report_num, file->filepath);
+							printf("scan id = %s\n", file->scan_id);
+						}					
+						file->report_time += REPORT_PAUSE;							
+						file = file->next;
+					}
+					else{ // get response_code successfully
+						if (file->response_code == 1){
+							printf(">> Scan Success and move file to DoneQueue!\n");
+							next = file->next;
+							DeleteNode(ReportQueue, file);
+							MoveObjToDoneQueue(file);
+							file = next;
+						}
+						else if (file->response_code == 0){
+
+							printf(">> The item you searched for was not present in VirusTotal's dataset!\n");
+							next = file->next;
+							DeleteNode(ScanQueue, file);
+							MoveObjToDoneQueue(file);
+							file = next;
+						}
+						else if (file->response_code == -2){
+							//printf(">> Queued for analysis!(%d times %d) %s\n", file->report_num, TotalRequest,file->filepath);
+							printf(">> Queued for analysis!(%d times) %s\n", file->report_num,  file->filepath);
+							file->report_time += REPORT_PAUSE;								
 							file = file->next;
-
 						}
-						else{ // get response_code successfully
-							if (file->response_code == 1)
-							{
+					}
 
-								printf(">> Scan Success and move file to DoneQueue!\n");
-								next = file->next;
-								DeleteNode(ReportQueue, file);
-								MoveObjToDoneQueue(file);
-								file = next;
+				}// end if(file->positive < 0)
 
-							}
-							else if (file->response_code == 0)
-							{
-
-								printf(">> The item you searched for was not present in VirusTotal's dataset!\n");
-								next = file->next;
-								DeleteNode(ScanQueue, file);
-								MoveObjToDoneQueue(file);
-								file = next;
-
-							}
-							else if (file->response_code == -2)
-							{
-								//printf(">> Queued for analysis!(%d times %d) %s\n", file->report_num, totalrequest,file->filepath);
-								printf(">> Queued for analysis!(%d times) %s\n", file->report_num,  file->filepath);
-								file->report_time += REPORT_PAUSE;								
-								file = file->next;
-							}
-						}
-
-					}// end if(file->positive < 0)
-
-					//release vtFile obj	
-					VtFile_put(&vtFile);
+				//release vtFile obj	
+				VtFile_put(&vtFile);
 					
-				} while (file != NULL); // end of do
-		}//end of if(file->total_num > 0)					
+		} while (file != NULL); // end of do
+	}//end of if(file->total_num > 0)					
 }
 /*
 TraverseDoneQueue: traverse done queue to get the target file's result after scanning on 
@@ -1181,54 +1132,76 @@ return 0 if there's no such file in DoneQueue
        1 if the file has been in the DoneQueue and md5 value has changed
 	   positives if the file has been in the DoneQueue and md5 value has no changed
 */
-INT TraverseDoneQueue(CHAR* filepath)
+INT TraverseDoneQueue(CHAR* filepath, FileState* currentfile)
 {
 	FileState* file = DoneQueue;
 	FileState *target;
 	INT ret = -1;
 	DWORD dwWaitResult;
 	
+	
+	currentfile->filepath = (char*)malloc(strlen(filepath)+1);
+	memset(currentfile->filepath, '\0', strlen(filepath) + 1);
+	strcpy_s(currentfile->filepath, strlen(filepath)+1, filepath);
+	//printf("%s\n", currentfile->filepath);
+
 	//search this file in DoneQueue first
 	dwWaitResult = WaitForSingleObject(hMutex_dq, INFINITE);
-	switch (dwWaitResult)
-	{
+	switch (dwWaitResult){
 		//The thread got ownership of the mutex
-	case WAIT_OBJECT_0:
-		__try{
-			if (file->total_num > 0)
-			{				
-				file = file->next; 
-				while (file!=NULL)
-				{
-					int same = strcmp(filepath, file->filepath);
-					if (same == 0 && (file->positive != -1)) //this file had been scanned before
-					{												
-						ret = file->positive;
-						target = file;
-						int match = CheckImageMd5(target);
-						if (!match){
-							DeleteNode(DoneQueue, target);
-							cleanNode(target);
-							MoveObjToScanQueue(target);
-							ret = -2;			
+		case WAIT_OBJECT_0:
+			__try {
+				if (file->total_num > 0){				
+					file = file->next; 
+					while (file!=NULL){
+						int same = strcmp(filepath, file->filepath);
+						//the targeted file is in DoneQueue
+						if (same == 0 && (file->positive != -1)) { 																							
+							target = file;
+							ret = target->positive;
+							file = NULL; // find the file and stop the loop
+																												
+							//if the file had been scanned before
+							if (target->hash != NULL){
+								int match = CheckImageMd5(target);
+								int sizeofHash = strlen(target->hash) + 1;
+								currentfile->hash = (char*)malloc(sizeofHash);
+								memset(currentfile->hash, '\0', sizeofHash);
+								strcpy_s(currentfile->hash, sizeofHash, target->hash);
+
+								if (!match){ //md5 does not match, means this file need to rescan
+									DeleteNode(DoneQueue, target);
+									cleanNode(target);
+									MoveObjToScanQueue(target);
+									ret = -2;			
+								}									
+							}
+							else{
+								currentfile->hash = NULL;
+							}
+							currentfile->id = target->id;
+							currentfile->positive = target->positive;
+							currentfile->scan_num = target->scan_num;
+							currentfile->scan_time = target->scan_time;
+							currentfile->report_num = target->report_num;
+							currentfile->report_time = target->report_time;
+													
 						}
-						file = NULL; // find the file and stop the loop
-					}
-					else{
-						file = file->next;
-					}
-				};
-			}//end of if(file->total_num >= 0)
-		}
-		__finally{
-			//release ownership of the mutex object
-			if (!ReleaseMutex(hMutex_dq))
-				printf(">> Release mutex_rq error\n");
-		}
-		break;
-	case WAIT_ABANDONED:
-		printf(">> Report mutex error: Wait abandoned\n");
-		break;
+						else{
+							file = file->next;
+						}
+					};
+				}//end of if(file->total_num >= 0)
+			}
+			__finally{
+				//release ownership of the mutex object
+				if (!ReleaseMutex(hMutex_dq))
+					printf(">> Release mutex_rq error\n");
+			}
+			break;
+		case WAIT_ABANDONED:
+			printf(">> Report mutex error: Wait abandoned\n");
+			break;
 	}//end of switch
 	
 	return ret;
@@ -1257,25 +1230,26 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 	CHAR userReply;
 	INT ki=0;
 	INT ret=0;
+	FileState *CurrentFile = NULL;
+	DWORD start_execution_time = 0;
+	DWORD end_execution_time = 0;
+	int sleepcounter = 0;
 	/*-----------------------creates several instances of a named pipe------------------------------------------------*/
 	//printf("Thread_ReceiveImagePath running...\n");
 
 	// lpParam not used here, so called this function to avoid warnings
 	UNREFERENCED_PARAMETER(lpParam);
-
-	for (i = 0; i < INSTANCES; i++)
-	{
-
+	CurrentFile = (FileState*) malloc(sizeof(FileState));
+	
+	for (i = 0; i < INSTANCES; i++){
 		// Create an event object for this instance. 
-
 		hEvents[i] = CreateEvent(
 			NULL,    // default security attribute 
 			TRUE,    // manual-reset event 
 			TRUE,    // initial state = signaled 
 			NULL);   // unnamed event object 
 
-		if (hEvents[i] == NULL)
-		{
+		if (hEvents[i] == NULL){
 			printf(">> Error: CreateEvent failed with %d.\n", GetLastError());
 			getErrorMsg(GetLastError());
 			return 0;
@@ -1296,27 +1270,24 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 			PIPE_TIMEOUT,            // client time-out 
 			NULL);                   // default security attributes 
 
-		if (Pipe[i].hPipeInst == INVALID_HANDLE_VALUE)
-		{
+		if (Pipe[i].hPipeInst == INVALID_HANDLE_VALUE){
 			printf(">> Error: CreateNamedPipe failed\n");
 			getErrorMsg(GetLastError());
 			return 0;
 		}
 
 		// Call the subroutine to connect to the new client
-
 		Pipe[i].fPendingIO = ConnectToNewClient(
 			Pipe[i].hPipeInst,
 			&Pipe[i].oOverlap);
 
 		Pipe[i].dwState = Pipe[i].fPendingIO ?
-		CONNECTING_STATE : // still connecting 
-						   READING_STATE;     // ready to read 
+			CONNECTING_STATE : // still connecting 
+			READING_STATE;     // ready to read 
 
 		//printf("Pipe[%d] fPendingIO: %d.\n", i, Pipe[i].fPendingIO);
 	}
-	while (1)
-	{
+	while (1){
 		//printf("----------------------WaitForMultipleObject---------------------\n");
 
 		// Wait for the event object to be signaled, indicating 
@@ -1333,176 +1304,156 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 		/* p.s dwWait is the index of the pipe */
 
 		i = dwWait - WAIT_OBJECT_0;  // determines which pipe 
-		if (i < 0 || i >(INSTANCES - 1))
-		{
+		if (i < 0 || i >(INSTANCES - 1)){
 			printf(">> Error: Index out of range.\n");
 			return 0;
 		}
 
 		// Get the result if the operation was pending. 
 		//printf("Pipe[%d] fPendingIO: %d.\n", i, Pipe[i].fPendingIO);
-		if (Pipe[i].fPendingIO)
-		{
+		if (Pipe[i].fPendingIO){
 			fSuccess = GetOverlappedResult(
 				Pipe[i].hPipeInst, // handle to pipe 
 				&Pipe[i].oOverlap, // OVERLAPPED structure 
 				&cbRet,            // bytes transferred 
 				FALSE);            // do not wait 
 
-			switch (Pipe[i].dwState)
-			{
+			switch (Pipe[i].dwState){
 				// Pending connect operation 
-			case CONNECTING_STATE:
-				//printf("connection state\n");
-				if (!fSuccess)
-				{
-					getErrorMsg(GetLastError());
-					//DisconnectAndReconnect(i);
-					//return 0;
-					continue;
-				}
-				Pipe[i].dwState = READING_STATE;
-				break;
+				case CONNECTING_STATE:
+					//printf("connection state\n");
+					if (!fSuccess){
+						getErrorMsg(GetLastError());
+						//DisconnectAndReconnect(i);
+						//return 0;
+						continue;
+					}
+					Pipe[i].dwState = READING_STATE;
+					break;
 
 				// Pending read operation 
-			case READING_STATE:
-				//printf("reading state\n");
-				
-				if (!fSuccess || cbRet == 0)
-				{
-					DisconnectAndReconnect(i);
-					continue;
-				}
-				else{
-					/* when server write to client once or server write to client fail*/
-					DisconnectAndReconnect(i);
-					fileExist = FALSE;
-					continue;
-				}
-				
-
-
-				Pipe[i].cbRead = cbRet;
-				//_tprintf(TEXT("Reading from pipe %s\n"), Pipe[i].chRequest);
-				Pipe[i].dwState = WRITING_STATE;
-				break;
+				case READING_STATE:
+					//printf("reading state\n");				
+					if (!fSuccess || cbRet == 0){
+						DisconnectAndReconnect(i);
+						continue;
+					}
+					else{
+						/* when server write to client once or server write to client fail*/
+						DisconnectAndReconnect(i);
+						fileExist = FALSE;
+						continue;
+					}				
+					Pipe[i].cbRead = cbRet;
+					//_tprintf(TEXT("Reading from pipe %s\n"), Pipe[i].chRequest);
+					Pipe[i].dwState = WRITING_STATE;
+					break;
 
 				// Pending write operation 
-			case WRITING_STATE:
-				//printf("writing state\n");
-				//printf("cbRet %d , Pipe[i] %d\n", cbRet, Pipe[i].cbToWrite);
-				if (!fSuccess || cbRet != Pipe[i].cbToWrite)
-				{
-					DisconnectAndReconnect(i);
-					continue;
-				}
-				//Pipe[i].dwState = READING_STATE;
-				break;
+				case WRITING_STATE:
+					//printf("writing state\n");
+					//printf("cbRet %d , Pipe[i] %d\n", cbRet, Pipe[i].cbToWrite);
+					if (!fSuccess || cbRet != Pipe[i].cbToWrite){
+						DisconnectAndReconnect(i);
+						continue;
+					}
+					//Pipe[i].dwState = READING_STATE;
+					break;
 
-			default:
-			{
-				printf(">> Error: Invalid pipe state.\n");
-				return 0;
-			}
+				default:
+					printf(">> Error: Invalid pipe state.\n");
+					return 0;
 			}//end of switch
 		}//end of if
 
 		// The pipe state determines which operation to do next. 
 
-		switch (Pipe[i].dwState)
-		{
+		switch (Pipe[i].dwState){
 			// READING_STATE: 
 			// The pipe instance is connected to the client 
 			// and is ready to read a request from the client. 
 
-		case READING_STATE:
-			printf("2-reading state\n");
-			fSuccess = ReadFile(
-				Pipe[i].hPipeInst,
-				Pipe[i].chRequest,
-				BUFSIZE*sizeof(TCHAR),
-				&Pipe[i].cbRead,
-				&Pipe[i].oOverlap);
+			case READING_STATE:
+				printf("2-reading state\n");
+				fSuccess = ReadFile(
+					Pipe[i].hPipeInst,
+					Pipe[i].chRequest,
+					BUFSIZE*sizeof(TCHAR),
+					&Pipe[i].cbRead,
+					&Pipe[i].oOverlap);
+			
+				// The read operation completed successfully. 
+				if (fSuccess && Pipe[i].cbRead != 0){
+					//_tprintf(TEXT("Reading from pipe %s\n"), Pipe[i].chRequest);
 
-			// The read operation completed successfully. 
-			if (fSuccess && Pipe[i].cbRead != 0)
-			{
-				//_tprintf(TEXT("Reading from pipe %s\n"), Pipe[i].chRequest);
-
-				FileState *node;
-				CHAR *tempPath1, *tempPath2;
+					FileState *node;
+					CHAR *tempPath1, *tempPath2;
 				
-				tempPath1 = TransferTcharToChar(Pipe[i].chRequest);
-				tempPath2 = CheckForImagePath(tempPath1);
-				//printf("Transfer imagepath %s \n", imagepath);
-						
-				imagepath = StringToLower(tempPath2);
+					tempPath1 = TransferTcharToChar(Pipe[i].chRequest);
+					tempPath2 = CheckForImagePath(tempPath1);
+					//printf("Transfer imagepath %s \n", imagepath);
+				
+					//calculate execution time 
+					start_execution_time = timeGetTime();
 
-				//search if DoneQueue have this file already?
-				ret = TraverseDoneQueue(imagepath);
-				switch (ret){					
-				case -1: /* file doesn't exist in DoneQueue */
-					fileExist = FALSE;
-					fileModified = FALSE;
-					printf("file do not exist and file is not modified\n");
-					break;				
-				case -2: /* file exist and md5 don't match */
-					fileExist = TRUE;
-					fileModified = TRUE;
-					printf("file exist and file is modified\n");
-					break;
-				default: /* file exist and md5 match */
-					fileExist = TRUE;
-					fileModified = FALSE;
-					printf("file exist and file is not modified\n");
-					positive = ret;
-					break;
-					
+					imagepath = StringToLower(tempPath2);
+					sleepcounter = 0;
+					//search if DoneQueue have this file already?
+					ret = TraverseDoneQueue(imagepath, CurrentFile);
+					switch (ret){					
+						case -1: /* file doesn't exist in DoneQueue */
+							fileExist = FALSE;
+							fileModified = FALSE;
+							printf("file do not exist and file is not modified\n");
+							break;				
+						case -2: /* file exist and md5 don't match */
+							fileExist = TRUE;
+							fileModified = TRUE;
+							printf("file exist and file is modified\n");
+							break;
+						default: /* file exist and md5 match */
+							fileExist = TRUE;
+							fileModified = FALSE;
+							printf("file exist and file is not modified\n");
+							positive = ret;
+							break;					
 				}
 				
 				// special case imagepath
 				// if imagepath isn't start with C:.. then print it
-				if (strncmp(imagepath, "c:", strlen("c:")))
-				{
-					
-					printf(">> Special case %s\n", imagepath);
-					
+				if (strncmp(imagepath, "c:", strlen("c:"))){				
+					printf(">> Special case %s\n", imagepath);				
 					fileExist = TRUE;
 					Pipe[i].fPendingIO = FALSE;
 					Pipe[i].dwState = WRITING_STATE;
 					continue;
 				}
 
-				if (!fileExist)
-				{
+				if (!fileExist){
 					node = CreateNode(imagepath, ki);
 					ki++;
 					if (ki == MAX_NUMBERS_OF_KEY)
 						ki = ki % MAX_NUMBERS_OF_KEY;
-
 					
 					dwWaitResult = WaitForSingleObject(hMutex_request, INFINITE);
-					switch (dwWaitResult)
-					{
+					switch (dwWaitResult){
 						//The thread got ownership of the mutex
-					case WAIT_OBJECT_0:
-						__try{
-							//add obj into sending queue							
-							InsertNode(ScanQueue, node);
-						}
-						__finally{
-							//release ownership of the mutex object
-							if (!ReleaseMutex(hMutex_request))
-								printf(">> Error: Release mutex_sq error\n");
-						}
-						break;
-					case WAIT_ABANDONED:
-						printf(">> Error: Thread_SendingImagePath: Wait abandoned\n");
-						break;
+						case WAIT_OBJECT_0:
+							__try{
+								//add obj into sending queue							
+								InsertNode(ScanQueue, node);
+							}
+							__finally{
+								//release ownership of the mutex object
+								if (!ReleaseMutex(hMutex_request))
+									printf(">> Error: Release mutex_sq error\n");
+							}
+							break;
+						case WAIT_ABANDONED:
+							printf(">> Error: Thread_SendingImagePath: Wait abandoned\n");
+							break;
 					}//end of switch
-
 					
-
 				}//end of if(!fileExists)				
 
 				Pipe[i].fPendingIO = FALSE;
@@ -1515,8 +1466,7 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 			dwErr = GetLastError();
 			getErrorMsg(GetLastError());
 
-			if (!fSuccess &&(dwErr == ERROR_IO_PENDING))
-			{//readfile again
+			if (!fSuccess &&(dwErr == ERROR_IO_PENDING)){//readfile again
 				Pipe[i].fPendingIO = TRUE;
 				continue;
 			}
@@ -1530,27 +1480,30 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 			// Get the reply data and write it to the client. 
 
 		case WRITING_STATE:
-			printf("2-writing state\n");			
+			printf("2-writing state\n");	
+			
 			while ((!fileExist && !fileModified) || (fileExist && fileModified) ){ //if the file is scanned first time, then keep traverse DoneQueue till the file has scanned over.
 				Sleep(DONE_PAUSE);
-				ret = TraverseDoneQueue(imagepath);
+				sleepcounter++;
+				printf("sleep counter %d\n\n", sleepcounter);
+				ret = TraverseDoneQueue(imagepath, CurrentFile);
 				switch (ret){
-				case -1: /* file doesn't exist in DoneQueue */
-					fileExist = FALSE;
-					fileModified = FALSE;
-					printf("file do not exist and file is not modified\n");
-					break;
-				case -2: /* file exist and md5 don't match */
-					fileExist = TRUE;
-					fileModified = TRUE;
-					printf("file exist and file is modified\n");
-					break;
-				default: /* file exist and md5 match */
-					fileExist = TRUE;
-					fileModified = FALSE;
-					positive = ret;
-					printf("file  exist and file is not modified\n");
-					break;
+					case -1: /* file doesn't exist in DoneQueue */
+						fileExist = FALSE;
+						fileModified = FALSE;
+						//printf("file do not exist and file is not modified\n");
+						break;
+					case -2: /* file exist and md5 don't match */
+						fileExist = TRUE;
+						fileModified = TRUE;
+						printf("file exist and file is modified\n");
+						break;
+					default: /* file exist and md5 match */
+						fileExist = TRUE;
+						fileModified = FALSE;
+						positive = ret;
+						printf("file  exist and file is not modified\n");
+						break;
 				}
 			};
 									
@@ -1565,19 +1518,22 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 			//else if(!fileExist && (clock % 20) == 0)			
 			
 			//if fileExist=TRUE && fileModified=FALSE , then send reply to client
-			if (fileExist && !fileModified)
-			{		
+			if (fileExist && !fileModified){		
 				reply = (positive < THRESHOLD) ? 1 : 0;
 
+				
+
 				//if the file is unsafe
-				if (reply == 0)
-				{
+				if (reply == 0){
+					userReply = "";
 					//tell the user that there's a file may be unsafe, and ask user to execute it or not?
 					printf("==================================================================\n");
 					printf("The file below may be unsafe!!\n %s\nStill want to execute it(y/n)?", imagepath);					
 					scanf("%c", &userReply);
-					if ((userReply == 'y') || (userReply=='Y'))
+					if ((userReply == 'y'))
 						reply = 1;
+					else
+						printf("userReply error -%c!!!\n",userReply);
 				}	
 
 				GetAnswerToRequest(&Pipe[i], reply);
@@ -1589,13 +1545,18 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 								&cbRet,
 								&Pipe[i].oOverlap);
 
+				//caculate execution time and ouput CurrentFile info
+				end_execution_time = timeGetTime();
+				CurrentFile->execution_time = end_execution_time - start_execution_time;
+				WriteDoneRecord(CurrentFile);
+
 				// The write operation completed successfully. 
-				if (fSuccess && cbRet == Pipe[i].cbToWrite)
-				{
+				if (fSuccess && cbRet == Pipe[i].cbToWrite){
 					//now fileExists = 1;
 					Sleep(DONE_PAUSE); //to avoid pipe disconnected before driver read the buffer
 					Pipe[i].fPendingIO = TRUE;
 					Pipe[i].dwState = READING_STATE;
+					
 					//DisconnectAndReconnect(i);
 					continue;
 				}
@@ -1603,8 +1564,7 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 				dwErr = GetLastError();
 				getErrorMsg(dwErr);	
 
-				if (!fSuccess && (dwErr == ERROR_IO_PENDING))
-				{
+				if (!fSuccess && (dwErr == ERROR_IO_PENDING)){
 					//now fileExists = 0;
 					printf(">> Error: Write file failed, error io pending\n");
 					Pipe[i].fPendingIO = TRUE;
@@ -1612,6 +1572,8 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 					
 					continue;
 				}
+				
+
 				// An error occurred; disconnect from the client. 
 				DisconnectAndReconnect(i);
 				break;
@@ -1632,38 +1594,33 @@ DWORD WINAPI Thread_Scan(LPVOID lpParam)
 {
 
 	//printf("Thread_Scan running...\n");
-
 	// lpParam not used here, so called this function to avoid warnings
 	UNREFERENCED_PARAMETER(lpParam);
 
 	DWORD dwWaitResult;
 	FileState* file = ScanQueue;
-	while (1)
-	{
+	while (1){
 		//wait until getting scanning queue's access right
 		dwWaitResult = WaitForSingleObject(hMutex_request, INFINITE);
-		switch (dwWaitResult)
-		{
+		switch (dwWaitResult){
 			//The thread got ownership of the mutex
-		case WAIT_OBJECT_0:
-			__try{
-				if (file->total_num > 0)
-				{
-					TraverseScanQueue();
-					//printf("Scan all the files in ScanQueue already\n");
+			case WAIT_OBJECT_0:
+				__try{
+					if (file->total_num > 0){					
+						TraverseScanQueue();
+						//printf("Scan all the files in ScanQueue already\n");
+					}
 				}
-			}
-			__finally{
-				//release ownership of the mutex object
-				if (!ReleaseMutex(hMutex_request))
-				{
-					printf(">> Error: Release mutex_sq error\n");
+				__finally{
+					//release ownership of the mutex object
+					if (!ReleaseMutex(hMutex_request)){
+						printf(">> Error: Release mutex_sq error\n");
+					}
 				}
-			}
-			break;
-		case WAIT_ABANDONED:
-			printf(">> Error: Scan mutex : Wait abandoned\n");
-			break;
+				break;
+			case WAIT_ABANDONED:
+				printf(">> Error: Scan mutex : Wait abandoned\n");
+				break;
 		}//end of switch
 		Sleep(SCAN_PAUSE);
 	}
@@ -1678,37 +1635,33 @@ DWORD WINAPI Thread_Report(LPVOID lpParam)
 	// lpParam not used here, so called this function to avoid warnings
 	UNREFERENCED_PARAMETER(lpParam);
 
-	while (1)
-	{
+	while (1){
 		Sleep(REPORT_PAUSE);
 		dwWaitResult = WaitForSingleObject(hMutex_request, INFINITE);
 		switch (dwWaitResult)
 		{
 			//The thread got ownership of the mutex
-		case WAIT_OBJECT_0:
-			__try{
-				if (file->total_num > 0)
-				{
-					TraverseReportQueue();
-					//printf("Report all the files in ReportQueue already\n");
+			case WAIT_OBJECT_0:
+				__try{
+					if (file->total_num > 0){
+						TraverseReportQueue();
+						//printf("Report all the files in ReportQueue already\n");
+					}
+					else{
+						//printf("No file in Report Queue!\n");
+					}
 				}
-				else{
-					//printf("No file in Report Queue!\n");
+				__finally{
+					//release ownership of the mutex object
+					if (!ReleaseMutex(hMutex_request)){
+						printf(">>Error: Release mutex_rq error\n");
+					}
 				}
-			}
-			__finally{
-				//release ownership of the mutex object
-				if (!ReleaseMutex(hMutex_request))
-				{
-					printf(">>Error: Release mutex_rq error\n");
-				}
-			}
-			break;
-		case WAIT_ABANDONED:
-			printf(">>Error: Report mutex error: Wait abandoned\n");
-			break;
-		}//end of switch
-		
+				break;
+			case WAIT_ABANDONED:
+				printf(">>Error: Report mutex error: Wait abandoned\n");
+				break;
+		}//end of switch		
 	}
 	return 0;
 }
@@ -1772,8 +1725,7 @@ int main(int argc, char* argv[]){
 
 	/* CreateFile to kernel driver and get a handle*/
 	hdevice = CreateFile(driver_name, GENERIC_WRITE | GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (hdevice == INVALID_HANDLE_VALUE)
-	{
+	if (hdevice == INVALID_HANDLE_VALUE){
 		DWORD err = GetLastError();
 		printf(">> Error: invalid handle value, error code=%x\n", err);
 		getErrorMsg(GetLastError());
@@ -1796,15 +1748,13 @@ int main(int argc, char* argv[]){
 	/* create mutex with no owner */	
 
 	hMutex_dq = CreateMutex(NULL, FALSE, "mutex_dq");
-	if (hMutex_dq == NULL)
-	{
+	if (hMutex_dq == NULL){
 		printf(">> CreateMutex error (hMutex_dq): %d\n", GetLastError());
 		getErrorMsg(GetLastError());
 		return -1;
 	}
 	hMutex_request = CreateMutex(NULL, FALSE, "mutex_rq");
-	if (hMutex_request == NULL)
-	{
+	if (hMutex_request == NULL){
 		printf(">> CreateMutex error (hMutex_request): %d\n", GetLastError());
 		getErrorMsg(GetLastError());
 		return -1;
