@@ -57,7 +57,7 @@
 #define VIRUSTOTAL_ENGINES_NUMBERS 56
 #define THRESHOLD VIRUSTOTAL_ENGINES_NUMBERS*1/3	/* threshold to judge the file is safe or not */
 #define SCAN_PAUSE 15000							/* time to sleep when scanning (microsecond) */
-#define REPORT_PAUSE 17000							/* time to sleep when reporting (microsecond) */
+#define REPORT_PAUSE 15000							/* time to sleep when reporting (microsecond) old: 17000*/
 #define DONE_PAUSE 2000								/* time to sleep when asking done queue (microsecond) */
 
 /* a function pointer points to ZwCreatUserProcess syscall */
@@ -285,68 +285,6 @@ VOID PrintNode(FileState *list){
 	printf("Print linked list end --------------------------------\n");
 }
 
-/*
-	WriteDoneRecord: Write out a file's info to a file
-	@file : FileState obj
- */
-VOID WriteDoneRecord(FileState* file)
-{
-
-	DWORD dwWaitResult;
-	FILE *pFile = NULL;
-	CHAR openfile[] = "result.txt";
-
-	pFile = fopen(openfile, "a");
-	if (pFile){
-		// id > imagepath
-		// positive = .. 
-		// scan time .. / scan num .. = .. (ms)
-		// report time .. / report num .. = ..(ms)
-
-		fprintf(pFile, "%d", OuputCounter);
-		fprintf(pFile, "%s", "> ");
-		fprintf(pFile, "%s", file->filepath);
-		fprintf(pFile, "%s", "\n");
-
-		fprintf(pFile, "%s", "positive = ");
-		fprintf(pFile, "%d", file->positive);
-		fprintf(pFile, "%s", "\n");
-
-		fprintf(pFile, "%s", "scan time: ");
-		fprintf(pFile, "%d", file->scan_time);
-		fprintf(pFile, "%s", " / ");
-		fprintf(pFile, "%s", "scan num: ");
-		fprintf(pFile, "%d", file->scan_num);
-		fprintf(pFile, "%s", " = ");
-		fprintf(pFile, "%f", (FLOAT)file->scan_time / file->scan_num);
-		fprintf(pFile, "%s", " (ms)");
-		fprintf(pFile, "%s", " \n");
-
-		fprintf(pFile, "%s", "report time: ");
-		fprintf(pFile, "%d", file->report_time);
-		fprintf(pFile, "%s", " / ");
-		fprintf(pFile, "%s", "report num: ");
-		fprintf(pFile, "%d", file->report_num);
-		fprintf(pFile, "%s", " = ");
-		fprintf(pFile, "%f", (FLOAT)file->report_time / file->report_num);
-		fprintf(pFile, "%s", " (ms)");
-		fprintf(pFile, "%s", " \n");
-
-		fprintf(pFile, "%s", "execution time: ");
-		fprintf(pFile, "%d", file->execution_time);
-		fprintf(pFile, "%s", " (ms)");
-		fprintf(pFile, "%s", " \n\n ");
-
-		fclose(pFile);
-		OuputCounter++;
-	}
-	else{//if pFile fail
-		printf("write_to file fail...\n");
-		return -1;
-	}
-
-	return 0;
-}
 
 /*
 	ReleaseNode
@@ -549,7 +487,81 @@ INT WriteToFile(char* imagepath, char* inputStr){
 	//free(openfile);
 	return 0;
 }
+/*
+WriteDoneRecord: Write out a file's info to a file
+@file : FileState obj
+*/
+VOID WriteDoneRecord(FileState* file)
+{
+	DWORD dwWaitResult;
+	FILE *pFile = NULL;
+	//CHAR openfile[] = "result.txt"; //result_chrome.txt
+	char* filename = GetFileName(file->filepath);
+	char* tmp = "result_";
+	int length = strlen(filename) + strlen(tmp) + 1;
+	char* openfile = (char*)malloc(sizeof(char)*length); //15
+	memset(openfile, '\0', length);
+	strncpy(openfile, tmp, strlen(tmp));
+	strcat_s(openfile, length, filename);
 
+	pFile = fopen(openfile, "a");
+	if (pFile){
+		// old output format:
+		//		id > imagepath
+		//		positive = .. 
+		//		scan time .. / scan num .. = .. (ms)
+		//		report time .. / report num .. = ..(ms)
+
+		// new output format:
+		//		(positive) (scan time)	(scan num) 	(report time)	(report num)	(execution time)		
+
+		//-----------old output format starts from here----------------------------
+		//fprintf(pFile, "%d", OuputCounter);
+		//fprintf(pFile, "%s", "> ");		
+		//fprintf(pFile, "%s", file->filepath);
+		//fprintf(pFile, "%s", "\n");
+
+		//fprintf(pFile, "%s", "positive = ");
+		fprintf(pFile, "%d", file->positive);
+		//fprintf(pFile, "%s", "\n");
+		fprintf(pFile, "%s", "\t");
+		//fprintf(pFile, "%s", "scan time: ");
+		fprintf(pFile, "%d", file->scan_time);
+		//fprintf(pFile, "%s", " / ");
+		fprintf(pFile, "%s", "\t");
+		//fprintf(pFile, "%s", "scan num: ");
+		fprintf(pFile, "%d", file->scan_num);
+		fprintf(pFile, "%s", "\t");
+		//fprintf(pFile, "%f", (FLOAT)file->scan_time / file->scan_num);
+		//fprintf(pFile, "%s", " (ms)");
+		//fprintf(pFile, "%s", " \n");
+
+		//fprintf(pFile, "%s", "report time: ");
+		fprintf(pFile, "%d", file->report_time);
+		fprintf(pFile, "%s", "\t");
+		//fprintf(pFile, "%s", "report num: ");
+		fprintf(pFile, "%d", file->report_num);
+		fprintf(pFile, "%s", "\t");
+		//fprintf(pFile, "%s", " = ");
+		//fprintf(pFile, "%f", (FLOAT)file->report_time / file->report_num);
+		//fprintf(pFile, "%s", " (ms)");
+		//fprintf(pFile, "%s", " \n");
+
+		//fprintf(pFile, "%s", "execution time: ");
+		fprintf(pFile, "%d", file->execution_time);
+		//fprintf(pFile, "%s", " (ms)");
+		fprintf(pFile, "%s", "\n");
+
+		fclose(pFile);
+		OuputCounter++;
+	}
+	else{//if pFile fail
+		printf("write_to file fail...\n");
+		return -1;
+	}
+	free(openfile);
+	return 0;
+}
 /*
 	CheckForImagePath: if iamge path is \\??\\C:\Windows..., then filter out \\??\\
 */
@@ -956,7 +968,7 @@ INT CheckImageMd5(FileState* target)
 
 	convert_hex(origMd5, md5InHex);
 	fclose(inFile);
-
+	//free(dataFromFile);
 	if (strncmp(md5InHex, target->hash, MD5_DIGEST_LENGTH) == 0){
 		printf("image match and md5 correct!!\n");
 		return 1;
@@ -1064,7 +1076,6 @@ VOID TraverseReportQueue()
 			file = file->next;
 				
 			do{
-
 				struct VtFile *vtFile;
 
 				vtFile = VtFile_new();					
@@ -1093,14 +1104,13 @@ VOID TraverseReportQueue()
 					}
 					else{ // get response_code successfully
 						if (file->response_code == 1){
-							printf(">> Scan Success and move file to DoneQueue!\n");
+							printf(">> Report Success and move file to DoneQueue!\n");
 							next = file->next;
 							DeleteNode(ReportQueue, file);
 							MoveObjToDoneQueue(file);
 							file = next;
 						}
 						else if (file->response_code == 0){
-
 							printf(">> The item you searched for was not present in VirusTotal's dataset!\n");
 							next = file->next;
 							DeleteNode(ScanQueue, file);
@@ -1160,8 +1170,9 @@ INT TraverseDoneQueue(CHAR* filepath, FileState* currentfile)
 							target = file;
 							ret = target->positive;
 							file = NULL; // find the file and stop the loop
-																												
+							//------------------------2. disable temporary for test ---------------																					
 							//if the file had been scanned before
+							/*
 							if (target->hash != NULL){
 								int match = CheckImageMd5(target);
 								int sizeofHash = strlen(target->hash) + 1;
@@ -1179,13 +1190,21 @@ INT TraverseDoneQueue(CHAR* filepath, FileState* currentfile)
 							else{
 								currentfile->hash = NULL;
 							}
+							*/
+							//-------------------------disable temporary for test ----------------------
+							
+							
 							currentfile->id = target->id;
 							currentfile->positive = target->positive;
 							currentfile->scan_num = target->scan_num;
 							currentfile->scan_time = target->scan_time;
 							currentfile->report_num = target->report_num;
 							currentfile->report_time = target->report_time;
-													
+
+							//--------------------3. add this temporary for test--------------------------
+							DeleteNode(DoneQueue, target);
+							//cleanNode(target);
+							free(target);
 						}
 						else{
 							file = file->next;
@@ -1398,27 +1417,33 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 
 					imagepath = StringToLower(tempPath2);
 					sleepcounter = 0;
+
+					//----------------1.cancel below code temporary---------------------------
+					
 					//search if DoneQueue have this file already?
+					/*
 					ret = TraverseDoneQueue(imagepath, CurrentFile);
 					switch (ret){					
-						case -1: /* file doesn't exist in DoneQueue */
+						case -1: // file doesn't exist in DoneQueue 
 							fileExist = FALSE;
 							fileModified = FALSE;
 							printf("file do not exist and file is not modified\n");
 							break;				
-						case -2: /* file exist and md5 don't match */
+						case -2: // file exist and md5 don't match 
 							fileExist = TRUE;
 							fileModified = TRUE;
 							printf("file exist and file is modified\n");
 							break;
-						default: /* file exist and md5 match */
+						default: // file exist and md5 match 
 							fileExist = TRUE;
 							fileModified = FALSE;
 							printf("file exist and file is not modified\n");
 							positive = ret;
 							break;					
-				}
-				
+					}
+					*/
+					//----------------1. cancel above code temporary---------------------------
+
 				// special case imagepath
 				// if imagepath isn't start with C:.. then print it
 				if (strncmp(imagepath, "c:", strlen("c:"))){				
@@ -1485,7 +1510,7 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 			while ((!fileExist && !fileModified) || (fileExist && fileModified) ){ //if the file is scanned first time, then keep traverse DoneQueue till the file has scanned over.
 				Sleep(DONE_PAUSE);
 				sleepcounter++;
-				printf("sleep counter %d\n\n", sleepcounter);
+				//printf("sleep counter %d\n\n", sleepcounter);
 				ret = TraverseDoneQueue(imagepath, CurrentFile);
 				switch (ret){
 					case -1: /* file doesn't exist in DoneQueue */
@@ -1535,6 +1560,12 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 					else
 						printf("userReply error -%c!!!\n",userReply);
 				}	
+				//caculate execution time and ouput CurrentFile info
+				end_execution_time = timeGetTime();
+				CurrentFile->execution_time = end_execution_time - start_execution_time;
+				WriteDoneRecord(CurrentFile);
+				//free(CurrentFile->filepath);
+				//free(CurrentFile);
 
 				GetAnswerToRequest(&Pipe[i], reply);
 				fSuccess = WriteFile(
@@ -1545,10 +1576,7 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 								&cbRet,
 								&Pipe[i].oOverlap);
 
-				//caculate execution time and ouput CurrentFile info
-				end_execution_time = timeGetTime();
-				CurrentFile->execution_time = end_execution_time - start_execution_time;
-				WriteDoneRecord(CurrentFile);
+				
 
 				// The write operation completed successfully. 
 				if (fSuccess && cbRet == Pipe[i].cbToWrite){
@@ -1599,30 +1627,32 @@ DWORD WINAPI Thread_Scan(LPVOID lpParam)
 
 	DWORD dwWaitResult;
 	FileState* file = ScanQueue;
-	while (1){
-		//wait until getting scanning queue's access right
-		dwWaitResult = WaitForSingleObject(hMutex_request, INFINITE);
-		switch (dwWaitResult){
-			//The thread got ownership of the mutex
-			case WAIT_OBJECT_0:
-				__try{
-					if (file->total_num > 0){					
-						TraverseScanQueue();
-						//printf("Scan all the files in ScanQueue already\n");
+	if (file->next != NULL){
+		while (1){
+			//wait until getting scanning queue's access right
+			dwWaitResult = WaitForSingleObject(hMutex_request, INFINITE);
+			switch (dwWaitResult){
+				//The thread got ownership of the mutex
+				case WAIT_OBJECT_0:
+					__try{
+						if (file->total_num > 0){					
+							TraverseScanQueue();
+							//printf("Scan all the files in ScanQueue already\n");
+						}
 					}
-				}
-				__finally{
-					//release ownership of the mutex object
-					if (!ReleaseMutex(hMutex_request)){
-						printf(">> Error: Release mutex_sq error\n");
+					__finally{
+						//release ownership of the mutex object
+						if (!ReleaseMutex(hMutex_request)){
+							printf(">> Error: Release mutex_sq error\n");
+						}
 					}
-				}
-				break;
-			case WAIT_ABANDONED:
-				printf(">> Error: Scan mutex : Wait abandoned\n");
-				break;
-		}//end of switch
-		Sleep(SCAN_PAUSE);
+					break;
+				case WAIT_ABANDONED:
+					printf(">> Error: Scan mutex : Wait abandoned\n");
+					break;
+			}//end of switch
+			//Sleep(SCAN_PAUSE);
+		}
 	}
 	return 0;
 }

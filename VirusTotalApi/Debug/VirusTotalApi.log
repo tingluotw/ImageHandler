@@ -1,4 +1,4 @@
-﻿已經開始建置於 2015/5/29 上午 11:12:56。
+﻿已經開始建置於 2015/6/11 下午 03:48:24。
      1>節點 2 (Rebuild 目標) 上的專案 "C:\ImageHandler\VirusTotalApi\VirusTotalApi.vcxproj"。
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\ImageHandler\VirusTotalApi\include /IC:\ImageHandler\VirusTotalApi\custom_library\libcurl\include /IC:\ImageHandler\VirusTotalApi\custom_library\jansson\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D VIRUSTOTALAPI_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt lib\VtApiPage.c lib\VtComments.c lib\VtDebug.c lib\VtDomain.c lib\VtFile.c lib\VtFileDist.c lib\VtIpAddr.c lib\VtObject.c lib\VtResponse.c lib\VtUrl.c lib\VtUrlDist.c
@@ -236,4 +236,4 @@
 
 建置成功。
 
-經過時間 00:00:03.95
+經過時間 00:00:03.47
