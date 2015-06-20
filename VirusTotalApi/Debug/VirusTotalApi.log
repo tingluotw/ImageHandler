@@ -1,157 +1,6 @@
-﻿已經開始建置於 2015/5/29 上午 11:12:56。
-     1>節點 2 (Rebuild 目標) 上的專案 "C:\ImageHandler\VirusTotalApi\VirusTotalApi.vcxproj"。
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\ImageHandler\VirusTotalApi\include /IC:\ImageHandler\VirusTotalApi\custom_library\libcurl\include /IC:\ImageHandler\VirusTotalApi\custom_library\jansson\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D VIRUSTOTALAPI_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt lib\VtApiPage.c lib\VtComments.c lib\VtDebug.c lib\VtDomain.c lib\VtFile.c lib\VtFileDist.c lib\VtIpAddr.c lib\VtObject.c lib\VtResponse.c lib\VtUrl.c lib\VtUrlDist.c
-         VtUrlDist.c
-         VtUrl.c
-         VtResponse.c
-     1>c:\imagehandler\virustotalapi\lib\vtresponse.c(124): warning C4273: 'VtResponse_new' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtresponse.h(46) : 請參閱 'VtResponse_new' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtresponse.c(131): warning C4273: 'VtResponse_get' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtresponse.h(55) : 請參閱 'VtResponse_get' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtresponse.c(136): warning C4273: 'VtResponse_put' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtresponse.h(64) : 請參閱 'VtResponse_put' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtresponse.c(150): warning C4273: 'VtResponse_getVerboseMsg' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtresponse.h(75) : 請參閱 'VtResponse_getVerboseMsg' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtresponse.c(154): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(195) : 請參閱 'strncpy' 的宣告
-     1>c:\imagehandler\virustotalapi\lib\vtresponse.c(159): warning C4273: 'VtResponse_getIntValue' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtresponse.h(115) : 請參閱 'VtResponse_getIntValue' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtresponse.c(177): warning C4273: 'VtResponse_getString' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtresponse.h(124) : 請參閱 'VtResponse_getString' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtresponse.c(198): warning C4273: 'VtResponse_getResponseCode' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtresponse.h(84) : 請參閱 'VtResponse_getResponseCode' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtresponse.c(203): warning C4273: 'VtResponse_toJSONstr' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtresponse.h(93) : 請參閱 'VtResponse_toJSONstr' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtresponse.c(234): warning C4273: 'VtResponse_fromJSONstr' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtresponse.h(104) : 請參閱 'VtResponse_fromJSONstr' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtresponse.c(243): warning C4273: 'VtResponse_getJanssonObj' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtresponse.h(133) : 請參閱 'VtResponse_getJanssonObj' 之前的定義
-         VtObject.c
-     1>c:\imagehandler\virustotalapi\lib\vtobject.c(328): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdlib.h(462) : 請參閱 'getenv' 的宣告
-         VtIpAddr.c
-         VtFileDist.c
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(110): warning C4273: 'VtFileDist_new' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfiledist.h(44) : 請參閱 'VtFileDist_new' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(117): warning C4273: 'VtFileDist_get' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfiledist.h(53) : 請參閱 'VtFileDist_get' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(122): warning C4273: 'VtFileDist_put' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfiledist.h(62) : 請參閱 'VtFileDist_put' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(126): warning C4273: 'VtFileDist_setApiKey' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfiledist.h(71) : 請參閱 'VtFileDist_setApiKey' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(128): warning C4098: 'VtFileDist_setApiKey' : 'void' 函式正在傳回值
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(131): warning C4273: 'VtFileDist_setReports' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfiledist.h(80) : 請參閱 'VtFileDist_setReports' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(135): warning C4273: 'VtFileDist_setAfter' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfiledist.h(90) : 請參閱 'VtFileDist_setAfter' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(139): warning C4273: 'VtFileDist_setBefore' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfiledist.h(99) : 請參閱 'VtFileDist_setBefore' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(143): warning C4273: 'VtFileDist_setLimit' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfiledist.h(108) : 請參閱 'VtFileDist_setLimit' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(147): warning C4273: 'VtFileDist_getResponse' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfiledist.h(117) : 請參閱 'VtFileDist_getResponse' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(152): warning C4273: 'VtFileDist_getDistribution' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfiledist.h(126) : 請參閱 'VtFileDist_getDistribution' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(174): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : 請參閱 'sprintf' 的宣告
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(181): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : 請參閱 'sprintf' 的宣告
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(189): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : 請參閱 'sprintf' 的宣告
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(197): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : 請參閱 'sprintf' 的宣告
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(205): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : 請參閱 'sprintf' 的宣告
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(284): warning C4018: '<' : signed/unsigned 不相符
-     1>c:\imagehandler\virustotalapi\lib\vtfiledist.c(328): warning C4273: 'VtFileDist_process' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfiledist.h(136) : 請參閱 'VtFileDist_process' 之前的定義
-         VtFile.c
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(123): warning C4273: 'VtFile_new' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(50) : 請參閱 'VtFile_new' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(130): warning C4273: 'VtFile_get' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(59) : 請參閱 'VtFile_get' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(135): warning C4273: 'VtFile_put' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(69) : 請參閱 'VtFile_put' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(141): warning C4273: 'VtFile_setApiKey' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(78) : 請參閱 'VtFile_setApiKey' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(147): warning C4273: 'VtFile_setOffset' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(88) : 請參閱 'VtFile_setOffset' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(158): warning C4273: 'VtFile_getResponse' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(174) : 請參閱 'VtFile_getResponse' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(165): warning C4273: 'VtFile_setProgressCallback' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(99) : 請參閱 'VtFile_setProgressCallback' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(211): warning C4273: 'VtFile_getProgress' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(112) : 請參閱 'VtFile_getProgress' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(220): warning C4273: 'VtFile_cancelOperation' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(121) : 請參閱 'VtFile_cancelOperation' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(267): warning C4273: 'VtFile_scan' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(132) : 請參閱 'VtFile_scan' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(396): warning C4273: 'VtFile_rescanHash' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(151) : 請參閱 'VtFile_rescanHash' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(554): warning C4273: 'VtFile_rescanDelete' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(162) : 請參閱 'VtFile_rescanDelete' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(644): warning C4273: 'VtFile_report' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(172) : 請參閱 'VtFile_report' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(654): warning C4101: 'current_directory' : 未參考的區域變數
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(753): warning C4273: 'VtFile_search' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(186) : 請參閱 'VtFile_search' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(898): warning C4273: 'VtFile_clusters' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(204) : 請參閱 'VtFile_clusters' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(1001): warning C4273: 'VtFile_download' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(220) : 請參閱 'VtFile_download' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(1075): warning C4273: 'VtFile_downloadToFile' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(231) : 請參閱 'VtFile_downloadToFile' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(1081): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(211) : 請參閱 'fopen' 的宣告
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(1093): warning C4273: 'VtFile_uploadUrl' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(235) : 請參閱 'VtFile_uploadUrl' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtfile.c(1155): warning C4273: 'VtFile_scanBigFile' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtfile.h(237) : 請參閱 'VtFile_scanBigFile' 之前的定義
-         VtDomain.c
-     1>c:\imagehandler\virustotalapi\lib\vtdomain.c(159): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : 請參閱 'sprintf' 的宣告
-         VtDebug.c
-         VtComments.c
-     1>c:\imagehandler\virustotalapi\lib\vtcomments.c(113): warning C4273: 'VtComments_new' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtcomments.h(40) : 請參閱 'VtComments_new' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtcomments.c(120): warning C4273: 'VtComments_get' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtcomments.h(48) : 請參閱 'VtComments_get' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtcomments.c(125): warning C4273: 'VtComments_put' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtcomments.h(57) : 請參閱 'VtComments_put' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtcomments.c(129): warning C4273: 'VtComments_setApiKey' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtcomments.h(66) : 請參閱 'VtComments_setApiKey' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtcomments.c(135): warning C4273: 'VtComments_getResponse' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtcomments.h(96) : 請參閱 'VtComments_getResponse' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtcomments.c(140): warning C4273: 'VtComments_setBefore' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtcomments.h(77) : 請參閱 'VtComments_setBefore' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtcomments.c(147): warning C4273: 'VtComments_setResource' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtcomments.h(87) : 請參閱 'VtComments_setResource' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtcomments.c(157): warning C4273: 'VtComments_add' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtcomments.h(105) : 請參閱 'VtComments_add' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtcomments.c(263): warning C4273: 'VtComments_retrieve' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtcomments.h(114) : 請參閱 'VtComments_retrieve' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtcomments.c(295): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\stdio.h(356) : 請參閱 'sprintf' 的宣告
-         VtApiPage.c
-     1>c:\imagehandler\virustotalapi\lib\vtapipage.c(61): warning C4273: 'VtApiPage_destructor' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtapipage.h(85) : 請參閱 'VtApiPage_destructor' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtapipage.c(95): warning C4273: 'VtApiPage_alloc' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtapipage.h(87) : 請參閱 'VtApiPage_alloc' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtapipage.c(104): warning C4273: 'VtApiPage_new' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtapipage.h(89) : 請參閱 'VtApiPage_new' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtapipage.c(111): warning C4273: 'VtApiPage_get' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtapipage.h(107) : 請參閱 'VtApiPage_get' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtapipage.c(116): warning C4273: 'VtApiPage_put' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtapipage.h(98) : 請參閱 'VtApiPage_put' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtapipage.c(121): warning C4273: 'VtApiPage_setApiKey' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtapipage.h(116) : 請參閱 'VtApiPage_setApiKey' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtapipage.c(129): warning C4273: 'VtApiPage_resetBuffer' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtapipage.h(135) : 請參閱 'VtApiPage_resetBuffer' 之前的定義
-     1>c:\imagehandler\virustotalapi\lib\vtapipage.c(137): warning C4273: '__VtApiPage_WriteCb' : 不一致的 DLL 連結
-                 c:\imagehandler\virustotalapi\include\vtapipage.h(127) : 請參閱 '__VtApiPage_WriteCb' 之前的定義
-         正在產生程式碼...
-       Link:
+﻿已經開始建置於 2015/6/20 上午 03:29:12。
+     1>節點 2 (Build 目標) 上的專案 "C:\ImageHandler\VirusTotalApi\VirusTotalApi.vcxproj"。
+     1>Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\ImageHandler\Debug\VirusTotalApi.dll" /INCREMENTAL /NOLOGO /LIBPATH:"C:\ImageHandler\VirusTotalApi\custom_library\libcurl\LIB Debug" /LIBPATH:C:\ImageHandler\VirusTotalApi\custom_library\jansson\lib libcurld.lib jansson_d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\ImageHandler\Debug\VirusTotalApi.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\ImageHandler\Debug\VirusTotalApi.lib" /MACHINE:X86 /DLL Debug\VtApiPage.obj
          Debug\VtComments.obj
          Debug\VtDebug.obj
@@ -163,6 +12,7 @@
          Debug\VtResponse.obj
          Debug\VtUrl.obj
          Debug\VtUrlDist.obj
+         LINK : 最後的累加連結找不到或未建置 C:\ImageHandler\Debug\VirusTotalApi.dll，正在執行完整連結
             正在建立程式庫 C:\ImageHandler\Debug\VirusTotalApi.lib 和物件 C:\ImageHandler\Debug\VirusTotalApi.exp
      1>VtFileDist.obj : warning LNK4049: 本機定義的符號 _VtResponse_put 已匯入
      1>VtIpAddr.obj : warning LNK4217: 本機定義的符號 _VtResponse_put 已匯入函式 _VtIpAddr_report
@@ -232,8 +82,8 @@
      1>VtFileDist.obj : warning LNK4049: 本機定義的符號 _VtResponse_getJanssonObj 已匯入
      1>VtUrlDist.obj : warning LNK4217: 本機定義的符號 _VtResponse_getJanssonObj 已匯入函式 _VtUrlDist_getDistribution
          VirusTotalApi.vcxproj -> C:\ImageHandler\Debug\VirusTotalApi.dll
-     1>專案 "C:\ImageHandler\VirusTotalApi\VirusTotalApi.vcxproj" (Rebuild 目標) 建置完成。
+     1>專案 "C:\ImageHandler\VirusTotalApi\VirusTotalApi.vcxproj" (Build 目標) 建置完成。
 
 建置成功。
 
-經過時間 00:00:03.95
+經過時間 00:00:02.59

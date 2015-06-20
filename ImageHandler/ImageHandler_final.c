@@ -57,7 +57,7 @@
 #define VIRUSTOTAL_ENGINES_NUMBERS 56
 #define THRESHOLD VIRUSTOTAL_ENGINES_NUMBERS*1/3	/* threshold to judge the file is safe or not */
 #define SCAN_PAUSE 15000							/* time to sleep when scanning (microsecond) */
-#define REPORT_PAUSE 17000							/* time to sleep when reporting (microsecond) */
+#define REPORT_PAUSE 15000							/* time to sleep when reporting (microsecond) */
 #define DONE_PAUSE 2000								/* time to sleep when asking done queue (microsecond) */
 
 /* a function pointer points to ZwCreatUserProcess syscall */
@@ -285,68 +285,6 @@ VOID PrintNode(FileState *list){
 	printf("Print linked list end --------------------------------\n");
 }
 
-/*
-	WriteDoneRecord: Write out a file's info to a file
-	@file : FileState obj
- */
-VOID WriteDoneRecord(FileState* file)
-{
-
-	DWORD dwWaitResult;
-	FILE *pFile = NULL;
-	CHAR openfile[] = "result.txt";
-
-	pFile = fopen(openfile, "a");
-	if (pFile){
-		// id > imagepath
-		// positive = .. 
-		// scan time .. / scan num .. = .. (ms)
-		// report time .. / report num .. = ..(ms)
-
-		fprintf(pFile, "%d", OuputCounter);
-		fprintf(pFile, "%s", "> ");
-		fprintf(pFile, "%s", file->filepath);
-		fprintf(pFile, "%s", "\n");
-
-		fprintf(pFile, "%s", "positive = ");
-		fprintf(pFile, "%d", file->positive);
-		fprintf(pFile, "%s", "\n");
-
-		fprintf(pFile, "%s", "scan time: ");
-		fprintf(pFile, "%d", file->scan_time);
-		fprintf(pFile, "%s", " / ");
-		fprintf(pFile, "%s", "scan num: ");
-		fprintf(pFile, "%d", file->scan_num);
-		fprintf(pFile, "%s", " = ");
-		fprintf(pFile, "%f", (FLOAT)file->scan_time / file->scan_num);
-		fprintf(pFile, "%s", " (ms)");
-		fprintf(pFile, "%s", " \n");
-
-		fprintf(pFile, "%s", "report time: ");
-		fprintf(pFile, "%d", file->report_time);
-		fprintf(pFile, "%s", " / ");
-		fprintf(pFile, "%s", "report num: ");
-		fprintf(pFile, "%d", file->report_num);
-		fprintf(pFile, "%s", " = ");
-		fprintf(pFile, "%f", (FLOAT)file->report_time / file->report_num);
-		fprintf(pFile, "%s", " (ms)");
-		fprintf(pFile, "%s", " \n");
-
-		fprintf(pFile, "%s", "execution time: ");
-		fprintf(pFile, "%d", file->execution_time);
-		fprintf(pFile, "%s", " (ms)");
-		fprintf(pFile, "%s", " \n\n ");
-
-		fclose(pFile);
-		OuputCounter++;
-	}
-	else{//if pFile fail
-		printf("write_to file fail...\n");
-		return -1;
-	}
-
-	return 0;
-}
 
 /*
 	ReleaseNode
@@ -547,6 +485,82 @@ INT WriteToFile(char* imagepath, char* inputStr){
 		return -1;
 	}
 	//free(openfile);
+	return 0;
+}
+/*
+WriteDoneRecord: Write out a file's info to a file
+@file : FileState obj
+*/
+VOID WriteDoneRecord(FileState* file)
+{
+
+	DWORD dwWaitResult;
+	FILE *pFile = NULL;
+	//CHAR openfile[] = "result.txt"; //result_chrome.txt
+	char* filename = GetFileName(file->filepath);
+	char* tmp = "result_";
+	int length = strlen(filename) + strlen(tmp) + 1;
+	char* openfile = (char*)malloc(sizeof(char)*length); //15
+	memset(openfile, '\0', length);
+	strncpy(openfile, tmp, strlen(tmp));
+	strcat_s(openfile, length, filename);
+
+	pFile = fopen(openfile, "a");
+	if (pFile){
+		// old output format:
+		//		id > imagepath
+		//		positive = .. 
+		//		scan time .. / scan num .. = .. (ms)
+		//		report time .. / report num .. = ..(ms)
+
+		// new output format:
+		//		(positive) (scan time)	(scan num) 	(report time)	(report num)	(execution time)		
+
+		//-----------old output format starts from here----------------------------
+		//fprintf(pFile, "%d", OuputCounter);
+		//fprintf(pFile, "%s", "> ");		
+		//fprintf(pFile, "%s", file->filepath);
+		//fprintf(pFile, "%s", "\n");
+
+		//fprintf(pFile, "%s", "positive = ");
+		fprintf(pFile, "%d", file->positive);
+		//fprintf(pFile, "%s", "\n");
+		fprintf(pFile, "%s", "\t");
+		//fprintf(pFile, "%s", "scan time: ");
+		fprintf(pFile, "%d", file->scan_time);
+		//fprintf(pFile, "%s", " / ");
+		fprintf(pFile, "%s", "\t");
+		//fprintf(pFile, "%s", "scan num: ");
+		fprintf(pFile, "%d", file->scan_num);
+		fprintf(pFile, "%s", "\t");
+		//fprintf(pFile, "%f", (FLOAT)file->scan_time / file->scan_num);
+		//fprintf(pFile, "%s", " (ms)");
+		//fprintf(pFile, "%s", " \n");
+
+		//fprintf(pFile, "%s", "report time: ");
+		fprintf(pFile, "%d", file->report_time);
+		fprintf(pFile, "%s", "\t");
+		//fprintf(pFile, "%s", "report num: ");
+		fprintf(pFile, "%d", file->report_num);
+		fprintf(pFile, "%s", "\t");
+		//fprintf(pFile, "%s", " = ");
+		//fprintf(pFile, "%f", (FLOAT)file->report_time / file->report_num);
+		//fprintf(pFile, "%s", " (ms)");
+		//fprintf(pFile, "%s", " \n");
+
+		//fprintf(pFile, "%s", "execution time: ");
+		fprintf(pFile, "%d", file->execution_time);
+		//fprintf(pFile, "%s", " (ms)");
+		fprintf(pFile, "%s", "\n");
+
+		fclose(pFile);
+		OuputCounter++;
+	}
+	else{//if pFile fail
+		printf("write_to file fail...\n");
+		return -1;
+	}
+	free(openfile);
 	return 0;
 }
 
@@ -1535,6 +1549,10 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 					else
 						printf("userReply error -%c!!!\n",userReply);
 				}	
+				//caculate execution time and ouput CurrentFile info
+				end_execution_time = timeGetTime();
+				CurrentFile->execution_time = end_execution_time - start_execution_time;
+				WriteDoneRecord(CurrentFile);
 
 				GetAnswerToRequest(&Pipe[i], reply);
 				fSuccess = WriteFile(
@@ -1545,10 +1563,7 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 								&cbRet,
 								&Pipe[i].oOverlap);
 
-				//caculate execution time and ouput CurrentFile info
-				end_execution_time = timeGetTime();
-				CurrentFile->execution_time = end_execution_time - start_execution_time;
-				WriteDoneRecord(CurrentFile);
+				
 
 				// The write operation completed successfully. 
 				if (fSuccess && cbRet == Pipe[i].cbToWrite){
