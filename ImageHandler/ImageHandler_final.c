@@ -57,7 +57,7 @@
 #define VIRUSTOTAL_ENGINES_NUMBERS 56
 #define THRESHOLD VIRUSTOTAL_ENGINES_NUMBERS*1/3	/* threshold to judge the file is safe or not */
 #define SCAN_PAUSE 15000							/* time to sleep when scanning (microsecond) */
-#define REPORT_PAUSE 15000							/* time to sleep when reporting (microsecond) old: 17000*/
+#define REPORT_PAUSE 17000							/* time to sleep when reporting (microsecond) old: 17000*/
 #define DONE_PAUSE 2000								/* time to sleep when asking done queue (microsecond) */
 
 /* a function pointer points to ZwCreatUserProcess syscall */
@@ -1172,8 +1172,8 @@ INT TraverseDoneQueue(CHAR* filepath, FileState* currentfile)
 							file = NULL; // find the file and stop the loop
 							//------------------------2. disable temporary for test ---------------																					
 							//if the file had been scanned before
-							/*
-							if (target->hash != NULL){
+
+							if ((target->hash != NULL) && (target->positive < THRESHOLD)){
 								int match = CheckImageMd5(target);
 								int sizeofHash = strlen(target->hash) + 1;
 								currentfile->hash = (char*)malloc(sizeofHash);
@@ -1190,7 +1190,7 @@ INT TraverseDoneQueue(CHAR* filepath, FileState* currentfile)
 							else{
 								currentfile->hash = NULL;
 							}
-							*/
+							
 							//-------------------------disable temporary for test ----------------------
 							
 							
@@ -1202,9 +1202,9 @@ INT TraverseDoneQueue(CHAR* filepath, FileState* currentfile)
 							currentfile->report_time = target->report_time;
 
 							//--------------------3. add this temporary for test--------------------------
-							DeleteNode(DoneQueue, target);
+							//DeleteNode(DoneQueue, target);
 							//cleanNode(target);
-							free(target);
+							//free(target);
 						}
 						else{
 							file = file->next;
@@ -1421,7 +1421,7 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 					//----------------1.cancel below code temporary---------------------------
 					
 					//search if DoneQueue have this file already?
-					/*
+					
 					ret = TraverseDoneQueue(imagepath, CurrentFile);
 					switch (ret){					
 						case -1: // file doesn't exist in DoneQueue 
@@ -1441,7 +1441,7 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 							positive = ret;
 							break;					
 					}
-					*/
+					
 					//----------------1. cancel above code temporary---------------------------
 
 				// special case imagepath
@@ -1560,12 +1560,7 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 					else
 						printf("userReply error -%c!!!\n",userReply);
 				}	
-				//caculate execution time and ouput CurrentFile info
-				end_execution_time = timeGetTime();
-				CurrentFile->execution_time = end_execution_time - start_execution_time;
-				WriteDoneRecord(CurrentFile);
-				//free(CurrentFile->filepath);
-				//free(CurrentFile);
+				
 
 				GetAnswerToRequest(&Pipe[i], reply);
 				fSuccess = WriteFile(
@@ -1579,7 +1574,14 @@ DWORD WINAPI Thread_ReceiveImagePath(LPVOID lpParam)
 				
 
 				// The write operation completed successfully. 
-				if (fSuccess && cbRet == Pipe[i].cbToWrite){
+				if (fSuccess && cbRet == Pipe[i].cbToWrite){					
+					//caculate execution time and ouput CurrentFile info
+					end_execution_time = timeGetTime();
+					CurrentFile->execution_time = end_execution_time - start_execution_time;
+					WriteDoneRecord(CurrentFile);
+					//free(CurrentFile->filepath);
+					//free(CurrentFile);
+
 					//now fileExists = 1;
 					Sleep(DONE_PAUSE); //to avoid pipe disconnected before driver read the buffer
 					Pipe[i].fPendingIO = TRUE;
